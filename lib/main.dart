@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'login_clone_fix.dart';
+import 'routes.dart';
 import 'calculator_page.dart';
 
 void main() {
@@ -14,11 +15,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const LoginCloneFix(),
+      title: "Belajar Flutter PPLG 3",
+      initialRoute: Routes.listProduct,
+      getPages: Routes.myPages,
     );
   }
 }

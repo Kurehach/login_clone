@@ -21,11 +21,11 @@ class Textfield extends StatelessWidget {
     return TextField(
       controller: txtController,
       // Membuka keyboard angka di HP
-      keyboardType: const TextInputType.numberWithOptions(decimal: true),
+      // keyboardType: const TextInputType.numberWithOptions(decimal: true),
       // Memblokir semua karakter selain angka dan titik desimal
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-      ],
+      // inputFormatters: [
+      //  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+      //],
       style: const TextStyle(
         color: Colors.white,
         fontSize: 16,
