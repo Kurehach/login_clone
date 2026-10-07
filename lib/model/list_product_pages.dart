@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:login_clone/model/list_product_controller.dart';
 import 'package:login_clone/model/detail_pages.dart';
+import 'package:login_clone/routes.dart';
 
 class ListProductPages extends StatelessWidget {
   const ListProductPages({super.key});
@@ -44,7 +45,7 @@ class ListProductPages extends StatelessWidget {
               ),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () {
-                Get.to(() => DetailPages(produk: produk));
+                Get.toNamed(Routes.detail, arguments: produk);
               },
             ),
           );

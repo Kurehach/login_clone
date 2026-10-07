@@ -1,24 +1,26 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:login_clone/model/produk_model.dart';
 
 class DetailPages extends StatelessWidget {
-  final ProdukModel produk;
-
-  const DetailPages({super.key, required this.produk});
+  const DetailPages({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // FITUR PENTING: Mengambil arguments yang dikirim dari halaman sebelumnya
+    final ProdukModel produk = Get.arguments as ProdukModel;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(produk.nama),
-        backgroundColor: Colors.greenAccent,
+        backgroundColor: Colors.green,
       ),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // 1. Gambar Produk di paling atas
+            // Gambar Produk
             SizedBox(
               height: 250,
               width: double.infinity,
@@ -30,7 +32,7 @@ class DetailPages extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // 2. Nama Toko
+                  // Toko
                   Row(
                     children: [
                       const Icon(Icons.store, size: 18, color: Colors.grey),
@@ -47,7 +49,7 @@ class DetailPages extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // 3. Nama Produk
+                  // Nama Produk
                   Text(
                     produk.nama,
                     style: const TextStyle(
@@ -57,7 +59,7 @@ class DetailPages extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // 4. Harga Produk
+                  // Harga
                   Text(
                     produk.harga,
                     style: const TextStyle(
@@ -68,7 +70,7 @@ class DetailPages extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  // 5. Rating & Review
+                  // Rating & Review
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 20),
@@ -93,7 +95,7 @@ class DetailPages extends StatelessWidget {
 
                   const Divider(height: 30, thickness: 1),
 
-                  // 6. Deskripsi Produk
+                  // Deskripsi
                   const Text(
                     "Deskripsi Produk",
                     style: TextStyle(
@@ -115,7 +117,6 @@ class DetailPages extends StatelessWidget {
     );
   }
 
-  // Helper fungsi gambar
   Widget _buildImage(String imageSrc) {
     if (imageSrc.startsWith("data:image") || imageSrc.startsWith("base64,")) {
       try {
