@@ -5,12 +5,16 @@ class Textfield extends StatelessWidget {
   final String myHint;
   final TextEditingController txtController;
   final double radius;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
 
   const Textfield({
     super.key,
     required this.myHint,
     required this.txtController,
     this.radius = 12.0,
+    this.keyboardType,
+    this.inputFormatters,
   });
 
   @override
@@ -20,12 +24,8 @@ class Textfield extends StatelessWidget {
 
     return TextField(
       controller: txtController,
-      // Membuka keyboard angka di HP
-      // keyboardType: const TextInputType.numberWithOptions(decimal: true),
-      // Memblokir semua karakter selain angka dan titik desimal
-      // inputFormatters: [
-      //  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
-      //],
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
       style: const TextStyle(
         color: Colors.white,
         fontSize: 16,

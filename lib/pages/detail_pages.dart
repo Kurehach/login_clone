@@ -8,7 +8,7 @@ class DetailPages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // FITUR PENTING: Mengambil arguments yang dikirim dari halaman sebelumnya
+    // 2. Mengambil argument dari Get.arguments
     final ProdukModel produk = Get.arguments as ProdukModel;
 
     return Scaffold(
@@ -16,23 +16,29 @@ class DetailPages extends StatelessWidget {
         title: Text(produk.nama),
         backgroundColor: Colors.green,
       ),
+      // SingleChildScrollView khusus untuk scrolling isi detail
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Gambar Produk
-            SizedBox(
-              height: 250,
-              width: double.infinity,
-              child: _buildImage(produk.gambar),
-            ),
+            produk.gambar.isNotEmpty
+                ? SizedBox(
+                    height: 250,
+                    width: double.infinity,
+                    child: _buildImage(produk.gambar),
+                  )
+                : Container(
+                    height: 200,
+                    width: double.infinity,
+                    color: Colors.grey.shade200,
+                    child: const Icon(Icons.image_not_supported, size: 50, color: Colors.grey),
+                  ),
 
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Toko
                   Row(
                     children: [
                       const Icon(Icons.store, size: 18, color: Colors.grey),
@@ -49,7 +55,6 @@ class DetailPages extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Nama Produk
                   Text(
                     produk.nama,
                     style: const TextStyle(
@@ -59,7 +64,6 @@ class DetailPages extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
 
-                  // Harga
                   Text(
                     produk.harga,
                     style: const TextStyle(
@@ -70,7 +74,6 @@ class DetailPages extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
 
-                  // Rating & Review
                   Row(
                     children: [
                       const Icon(Icons.star, color: Colors.amber, size: 20),
@@ -95,7 +98,6 @@ class DetailPages extends StatelessWidget {
 
                   const Divider(height: 30, thickness: 1),
 
-                  // Deskripsi
                   const Text(
                     "Deskripsi Produk",
                     style: TextStyle(

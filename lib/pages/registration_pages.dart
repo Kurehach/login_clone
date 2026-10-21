@@ -31,15 +31,13 @@ class RegistrationPages extends StatelessWidget {
               txtController: controller.txtAlamat,
             ),
 
-            TextField(
-              controller: controller.txtNoWa,
+            Textfield(
+              myHint: "Input No. WhatsApp",
+              txtController: controller.txtNoWa,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                hintText: "Input No. WhatsApp",
-              ),
             ),
-
+            
             Textfield(
               myHint: "Input Email",
               txtController: controller.txtEmail,
