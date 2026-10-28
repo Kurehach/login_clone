@@ -1,116 +1,140 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+
 import 'package:login_clone/controller/list_product_controller.dart';
 import 'package:login_clone/routes.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class Home extends StatelessWidget {
-  const Home({super.key});
+  Home({super.key});
+
+  final ListProdukController controller =
+      Get.isRegistered<ListProdukController>()
+          ? Get.find<ListProdukController>()
+          : Get.put(ListProdukController());
+
+  final Color cardColor = const Color.fromRGBO(23, 32, 48, 1);
+
+  // Membuka halaman detail produk
+  void bukaDetail(dynamic produk) {
+    Get.toNamed(
+      Routes.detailProduct,
+      arguments: produk,
+    );
+  }
+
+  // Menghapus produk
+  void hapusProduk(int index) {
+    final produk = controller.listProduk[index];
+
+    controller.listProduk.removeAt(index);
+
+    Get.snackbar(
+      "Produk Dihapus",
+      "${produk.nama} berhasil dihapus",
+      snackPosition: SnackPosition.BOTTOM,
+    );
+  }
+
+  // Refresh daftar produk
+  Future<void> refreshProduk() async {
+    await Future.delayed(const Duration(seconds: 1));
+  }
 
   @override
   Widget build(BuildContext context) {
-    final ListProdukController controller = Get.put(ListProdukController());
-
     return Scaffold(
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Rekomendasi Produk ⚡",
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+      appBar: AppBar(
+        title: const Text("Home"),
+        backgroundColor: cardColor,
+        foregroundColor: Colors.white,
+      ),
+      body: Obx(
+        () => RefreshIndicator(
+          onRefresh: refreshProduk,
+          child: GridView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(10),
+            itemCount: controller.listProduk.length,
+            gridDelegate:
+                const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 220,
+              mainAxisSpacing: 12,
+              crossAxisSpacing: 12,
+              mainAxisExtent: 125,
             ),
-            const SizedBox(height: 12),
+            itemBuilder: (context, index) {
+              final produk = controller.listProduk[index];
 
-            // ListView Horizontal untuk Scroll ke Kanan & Kiri
-            SizedBox(
-              height: 220, // Tinggi card produk horizontal
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal, // Bikin jadi horizontal!
-                itemCount: controller.listProduk.length > 5 ? 5 : controller.listProduk.length,
-                itemBuilder: (context, index) {
-                  final produk = controller.listProduk[index];
-                  return Container(
-                    width: 160, // Lebar card horizontal
-                    margin: const EdgeInsets.only(right: 12),
-                    child: Card(
-                      elevation: 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(color: Colors.grey.shade200),
-                      ),
-                      child: InkWell(
-                        borderRadius: BorderRadius.circular(12),
-                        onTap: () {
-                          Get.toNamed(Routes.detailProduct, arguments: produk);
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // Icon / Badge kecil
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green.shade50,
-                                      borderRadius: BorderRadius.circular(4),
-                                    ),
-                                    child: const Text(
-                                      "Official",
-                                      style: TextStyle(fontSize: 10, color: Colors.green, fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  // Nama Produk
-                                  Text(
-                                    produk.nama,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 4),
-                                  // Deskripsi singkat
-                                  Text(
-                                    produk.deskripsi,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                      fontSize: 11,
-                                      color: Colors.grey.shade600,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              // Harga
-                              Text(
-                                produk.harga,
-                                style: const TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ],
+              return Dismissible(
+                key: ValueKey(produk.nama),
+                direction: DismissDirection.startToEnd,
+                background: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 15),
+                  child: const Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                ),
+                onDismissed: (direction) {
+                  hapusProduk(index);
+                },
+                child: Card(
+                  color: cardColor,
+                  margin: EdgeInsets.zero,
+                  elevation: 4,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  clipBehavior: Clip.antiAlias,
+                  child: InkWell(
+                    onTap: () => bukaDetail(produk),
+                    child: Padding(
+                      padding: const EdgeInsets.all(12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            produk.nama,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
+                          const Spacer(),
+                          Text(
+                            produk.harga,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 5),
+                          const Align(
+                            alignment: Alignment.bottomRight,
+                            child: Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.white70,
+                              size: 15,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-              ),
-            ),
-          ],
+                  ),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

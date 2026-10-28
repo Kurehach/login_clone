@@ -1,26 +1,16 @@
-import 'package:get/get.dart';
-import 'package:login_clone/menu/Home.dart';
-import 'package:login_clone/menu/History.dart';
-import 'package:login_clone/menu/Profile.dart';
+import 'package:login_clone/menu/history.dart';
+import 'package:login_clone/menu/home.dart';
+import 'package:login_clone/menu/profile.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class MainMenuController extends GetxController {
-  var currentIndex = 0.obs;
+class MainMenuController extends GetxController{
+  final RxInt SelectedIndex = 0.obs;
 
-  // Daftar halaman menu utama
-  final List<Widget> pages = [
-    const Home(),
-    const History(),
-    const Profile(),
-  ];
+  void changePage(int index){
+    SelectedIndex.value = index;
 
-  final List<String> titles = [
-    "Katalog Produk",
-    "Riwayat Transaksi",
-    "Profil Akun",
-  ];
-
-  void changePage(int index) {
-    currentIndex.value = index;
   }
+  
+  List<Widget> listPages = [Home(), History(), Profile()];
 }

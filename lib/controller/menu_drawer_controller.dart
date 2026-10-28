@@ -1,10 +1,20 @@
+
+import 'package:login_clone/menu/home.dart';
+import 'package:login_clone/menu/history.dart';
+import 'package:login_clone/menu/profile.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class MenuDrawerController extends GetxController {
-  // Index aktif: 0 = Home, 1 = History, 2 = Profile
-  var selectedIndex = 0.obs;
+  final RxInt selectedIndex = 0.obs;
 
-  void changePageIndex(int index) {
+  List<Widget> listPages = [
+    Home(),
+    History(),
+    Profile(),
+  ];
+
+  void changePage(int index) {
     selectedIndex.value = index;
   }
 }
