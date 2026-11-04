@@ -59,16 +59,14 @@ class _CalculatorPageState extends State<CalculatorPage> {
             const SizedBox(height: 12),
             
             // Input Fields
-            Textfield(
-              myHint: "input angka 1",
+            TextfieldS(
+              labelText: "Input Angka 1",
               txtController: txtangka1,
-              radius: 12,
             ),
             const SizedBox(height: 16),
-            Textfield(
-              myHint: "input angka 2",
+            TextfieldS(
+              labelText: "Input Angka 2",
               txtController: txtangka2,
-              radius: 12,
             ),
             const SizedBox(height: 28),
 

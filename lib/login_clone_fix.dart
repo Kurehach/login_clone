@@ -4,6 +4,7 @@ import 'component/header_logo.dart';
 import 'component/instruction_text.dart';
 import 'component/custom_text_field.dart';
 import 'component/custom_button.dart';
+import 'controller/login_fix_controller.dart';
 
 class LoginCloneFix extends StatelessWidget {
   const LoginCloneFix({super.key});
@@ -61,10 +62,12 @@ class LoginCloneFix extends StatelessWidget {
             ),
             const SizedBox(height: 30),
             CustomButton(
-              text: "Next",
+              text: "Login",
               backgroundColor: primaryColor,
               textStyle: const TextStyle(color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+                LoginFixController().login();
+              },
             ),
           ],
         ),

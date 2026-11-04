@@ -4,11 +4,13 @@ import 'package:login_clone/pages/list_product_pages.dart';
 import 'package:login_clone/pages/detail_pages.dart';
 import 'package:login_clone/pages/main_menu_pages.dart';
 import 'package:login_clone/pages/menu_drawer_pages.dart';
+import 'package:login_clone/pages/login_pages.dart';
 import 'package:get/get.dart';
 
 class Routes {
   static const String registration = "/registration";
   static const String confirmRegistration = "/confirmRegistration";
+  static const String loginPages = "/loginPages";
   static const String mainMenuPages = "/mainMenuPages";
   static const String menuDrawerPages = "/menuDrawerPages";
   static const String detailProduct = "/detailProduct";
@@ -17,6 +19,7 @@ class Routes {
   static final myPages = [
     GetPage(name: registration, page: () => RegistrationPages()),
     GetPage(name: confirmRegistration, page: () => ConfirmRegistrationPages()),
+    GetPage(name: loginPages, page: () => LoginPage()),
     GetPage(name: mainMenuPages, page: () => MainMenuPages()),
     GetPage(name: menuDrawerPages, page: () => MenuDrawerPages()),
     GetPage(name: detailProduct, page: () => DetailPages()),

@@ -1,63 +1,81 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class Textfield extends StatelessWidget {
-  final String myHint;
+class TextfieldS extends StatelessWidget {
+  final String labelText;
   final TextEditingController txtController;
-  final double radius;
   final TextInputType? keyboardType;
   final List<TextInputFormatter>? inputFormatters;
+  final bool obscureText;
+  final Widget? suffixIcon;
 
-  const Textfield({
+  const TextfieldS({
     super.key,
-    required this.myHint,
+    required this.labelText,
     required this.txtController,
-    this.radius = 12.0,
     this.keyboardType,
     this.inputFormatters,
+    this.obscureText = false,
+    this.suffixIcon,
   });
 
   @override
   Widget build(BuildContext context) {
-    const goldPrimary = Color(0xFFD4AF37);
-    const inputFillColor = Color(0xFF1E1E24);
+    const steamInputBg = Color(0xFF182330);
+    const steamBorderColor = Color(0xFF2A3F5A);
+    const steamFocusBlue = Color(0xFF66C0F4);
+    const steamLabelColor = Color(0xFF8F98A0);
 
-    return TextField(
-      controller: txtController,
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 16,
-        fontWeight: FontWeight.w500,
-      ),
-      cursorColor: goldPrimary,
-      decoration: InputDecoration(
-        hintText: myHint,
-        hintStyle: TextStyle(
-          color: Colors.white.withOpacity(0.35),
-          fontSize: 15,
-        ),
-        filled: true,
-        fillColor: inputFillColor,
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 20,
-          vertical: 18,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radius),
-          borderSide: BorderSide(
-            color: Colors.white.withOpacity(0.15),
-            width: 1,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            labelText.toUpperCase(),
+            style: const TextStyle(
+              color: steamLabelColor,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.0,
+            ),
           ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(radius),
-          borderSide: const BorderSide(
-            color: goldPrimary,
-            width: 1.5,
+          const SizedBox(height: 6),
+          TextField(
+            controller: txtController,
+            keyboardType: keyboardType,
+            inputFormatters: inputFormatters,
+            obscureText: obscureText,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+            ),
+            cursorColor: steamFocusBlue,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: steamInputBg,
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 14,
+              ),
+              suffixIcon: suffixIcon,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4),
+                borderSide: const BorderSide(
+                  color: steamBorderColor,
+                  width: 1,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(4),
+                borderSide: const BorderSide(
+                  color: steamFocusBlue,
+                  width: 1.5,
+                ),
+              ),
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

@@ -21,25 +21,25 @@ class RegistrationPages extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Textfield(
-              myHint: "Input Nama",
+            TextfieldS(
+              labelText: "Input Nama",
               txtController: controller.txtNama,
             ),
 
-            Textfield(
-              myHint: "Input Alamat",
+            TextfieldS(
+              labelText: "Input Alamat",
               txtController: controller.txtAlamat,
             ),
 
-            Textfield(
-              myHint: "Input No. WhatsApp",
+            TextfieldS(
+              labelText: "Input No. WhatsApp",
               txtController: controller.txtNoWa,
               keyboardType: TextInputType.number,
               inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             ),
             
-            Textfield(
-              myHint: "Input Email",
+            TextfieldS(
+              labelText: "Input Email",
               txtController: controller.txtEmail,
             ),
 

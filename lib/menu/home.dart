@@ -1,8 +1,7 @@
-
-import 'package:login_clone/controller/list_product_controller.dart';
-import 'package:login_clone/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:login_clone/controller/list_product_controller.dart';
+import 'package:login_clone/routes.dart';
 
 class Home extends StatelessWidget {
   Home({super.key});
@@ -51,89 +50,114 @@ class Home extends StatelessWidget {
       body: Obx(
         () => RefreshIndicator(
           onRefresh: refreshProduk,
-          child: GridView.builder(
+          child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.all(10),
-            itemCount: controller.listProduk.length,
-            gridDelegate:
-                const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 220,
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              mainAxisExtent: 125,
-            ),
-            itemBuilder: (context, index) {
-              final produk = controller.listProduk[index];
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Katalog Produk Pilihan",
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
 
-              return Dismissible(
-                key: ValueKey(produk.nama),
-                direction: DismissDirection.startToEnd,
-                background: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.red,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  alignment: Alignment.centerLeft,
-                  padding: const EdgeInsets.only(left: 15),
-                  child: const Icon(
-                    Icons.delete,
-                    color: Colors.white,
-                  ),
-                ),
-                onDismissed: (direction) {
-                  hapusProduk(index);
-                },
-                child: Card(
-                  color: cardColor,
-                  margin: EdgeInsets.zero,
-                  elevation: 4,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () => bukaDetail(produk),
-                    child: Padding(
-                      padding: const EdgeInsets.all(12),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            produk.nama,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
+                  // SizedBox dengan tinggi tetap & Directionality RTL (Kanan ke Kiri)
+                  SizedBox(
+                    height: 200,
+                    child: Directionality(
+                      textDirection: TextDirection.rtl, // Scroll dari kanan ke kiri
+                      child: GridView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: controller.listProduk.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 1,
+                          mainAxisExtent: 160, // Lebar card horizontal
+                          mainAxisSpacing: 12,
+                        ),
+                        itemBuilder: (context, index) {
+                          final produk = controller.listProduk[index];
+
+                          return Dismissible(
+                            key: ValueKey(produk.nama + index.toString()),
+                            direction: DismissDirection.down,
+                            background: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.red,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              alignment: Alignment.center,
+                              child: const Icon(
+                                Icons.delete,
+                                color: Colors.white,
+                              ),
                             ),
-                          ),
-                          const Spacer(),
-                          Text(
-                            produk.harga,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
+                            onDismissed: (direction) {
+                              hapusProduk(index);
+                            },
+                            child: Card(
+                              color: cardColor,
+                              margin: EdgeInsets.zero,
+                              elevation: 4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              clipBehavior: Clip.antiAlias,
+                              child: InkWell(
+                                onTap: () => bukaDetail(produk),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        produk.nama,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        produk.harga,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.greenAccent,
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 5),
+                                      const Align(
+                                        alignment: Alignment.bottomRight,
+                                        child: Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: Colors.white70,
+                                          size: 14,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          const Align(
-                            alignment: Alignment.bottomRight,
-                            child: Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.white70,
-                              size: 15,
-                            ),
-                          ),
-                        ],
+                          );
+                        },
                       ),
                     ),
                   ),
-                ),
-              );
-            },
+                ],
+              ),
+            ),
           ),
         ),
       ),
