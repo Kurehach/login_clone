@@ -1,82 +1,51 @@
-import 'package:get/get.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:login_clone/model/login_model.dart';
+import 'package:login_clone/pages/menu_drawer_pages.dart';
 import 'package:login_clone/routes.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class LoginController extends GetxController {
-  // Deklarasi text editing controller sesuai video
   TextEditingController txtUsername = TextEditingController();
   TextEditingController txtPassword = TextEditingController();
 
-  // Variabel bolean untuk loading dengan .obs
   var isLoading = false.obs;
-
+  var loginModel = Rxn<LoginModel>();
 
   void login() async {
-    // Validasi form kosong
     if (txtUsername.text.toString().isEmpty || txtPassword.text.toString().isEmpty) {
-      Get.snackbar(
-        "Error",
-        "username dan password harus terisi",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }else{
+      Get.snackbar("Error", "Username dan password harus terisi");
+    } else {
+      try {
+        isLoading.value = true;
+        final url = Uri.parse("https://mediadwi.com/api/latihan/login");
 
-    try {
-      // Set loading jadi true
-      isLoading.value = true;
-      final url = Uri.parse("https://mediadwi.com/api/latihan/login");  
-
-      // Hit API menggunakan method POST dan URI.parse
-      final response = await http.post( url, body: {
-          'username': txtUsername.text,
-          'password': txtPassword.text,
+        final response = await http.post(url, body: {
+          "username": txtUsername.text.toString(),
+          "password": txtPassword.text.toString()
         });
 
-      // Kembalikan loading jadi false
-      isLoading.value = false;
+        isLoading.value = false;
+        if (response.statusCode == 200) {
+          loginModel.value = loginModelFromJson(response.body);
 
-      // Cek status code 200 (sukses)
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        if (data['status'] == true) {
-          Get.snackbar(
-            "Sukses", 
-            data['message'], 
-            backgroundColor: Colors.green, 
-            colorText: Colors.white
+          if (loginModel.value?.status == true) {
+            Get.snackbar("Berhasil", loginModel.value!.message.toString());
             
-          );
-          Get.offAllNamed(Routes.menuDrawerPages);
+            // Pindah ke Main Menu & hapus halaman Login dari stack
+            Get.offAll(() => MenuDrawerPages());
+          } else {
+            Get.snackbar("Gagal", loginModel.value!.message.toString());
+          }
         } else {
-          Get.snackbar(
-            "Gagal", 
-            data['message'], 
-            backgroundColor: Colors.red, 
-            colorText: Colors.white
-          );
+          Get.snackbar("Gagal", "Cek koneksi internet");
         }
-      } else {
-        Get.snackbar(
-          "Error", 
-          "Terjadi kesalahan pada server", 
-          backgroundColor: Colors.red, 
-          colorText: Colors.white
-        );
+      } catch (e) {
+        isLoading.value = false;
+        Get.snackbar("Gagal", e.toString());
+        print("Error-nya: " + e.toString());
       }
-    } catch (e) {
-      isLoading.value = false;
-      print("Error: $e");
-      Get.snackbar(
-        "Gagal", 
-        e.toString(), 
-        backgroundColor: Colors.red, 
-        colorText: Colors.white
-      );
     }
   }
-}
 }

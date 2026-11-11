@@ -9,7 +9,7 @@ class ListProductPages extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ListProdukController controller = Get.put(ListProdukController());
+    final ListProductController controller = Get.put(ListProductController());
 
     return Scaffold(
       appBar: AppBar(
@@ -18,9 +18,9 @@ class ListProductPages extends StatelessWidget {
       ),
       // Gunanya ListView.builder untuk scrolling list
       body: ListView.builder(
-        itemCount: controller.listProduk.length > 5 ? 5 : controller.listProduk.length,
+        itemCount: controller.listProduct.length > 5 ? 5 : controller.listProduct.length,
         itemBuilder: (context, index) {
-          final produk = controller.listProduk[index];
+          final produk = controller.listProduct[index];
           // Panggil Reusable Component Widget
           return _buildProductItem(produk);
         },
@@ -29,7 +29,7 @@ class ListProductPages extends StatelessWidget {
   }
 
   // REUSABLE COMPONENT WIDGET (3. Reusable Component)
-  Widget _buildProductItem(ProdukModel produk) {
+  Widget _buildProductItem(dynamic produk) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       child: ListTile(

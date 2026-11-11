@@ -6,10 +6,10 @@ import 'package:login_clone/routes.dart';
 class Home extends StatelessWidget {
   Home({super.key});
 
-  final ListProdukController controller =
-      Get.isRegistered<ListProdukController>()
-          ? Get.find<ListProdukController>()
-          : Get.put(ListProdukController());
+    final ListProductController controller =
+      Get.isRegistered<ListProductController>()
+        ? Get.find<ListProductController>()
+        : Get.put(ListProductController());
 
   final Color cardColor = const Color.fromRGBO(23, 32, 48, 1);
 
@@ -21,22 +21,22 @@ class Home extends StatelessWidget {
     );
   }
 
-  // Menghapus produk
+  // Menghapus produk dari list local state
   void hapusProduk(int index) {
-    final produk = controller.listProduk[index];
+    final produk = controller.listProduct[index];
 
-    controller.listProduk.removeAt(index);
+    controller.listProduct.removeAt(index);
 
     Get.snackbar(
       "Produk Dihapus",
-      "${produk.nama} berhasil dihapus",
+      "${produk.title ?? 'Item'} berhasil dihapus",
       snackPosition: SnackPosition.BOTTOM,
     );
   }
 
-  // Refresh daftar produk
+  // Refresh daftar produk dari API
   Future<void> refreshProduk() async {
-    await Future.delayed(const Duration(seconds: 1));
+    controller.fetchProducts();
   }
 
   @override
@@ -48,43 +48,56 @@ class Home extends StatelessWidget {
         foregroundColor: Colors.white,
       ),
       body: Obx(
-        () => RefreshIndicator(
-          onRefresh: refreshProduk,
-          child: SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Katalog Produk Pilihan",
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
+        () {
+          if (controller.isLoading.value) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-                  // SizedBox dengan tinggi tetap & Directionality RTL (Kanan ke Kiri)
-                  SizedBox(
-                    height: 200,
-                    child: Directionality(
-                      textDirection: TextDirection.rtl, // Scroll dari kanan ke kiri
+          if (controller.listProduct.isEmpty) {
+            return const Center(
+              child: Text("Data produk kosong"),
+            );
+          }
+
+          return RefreshIndicator(
+            onRefresh: refreshProduk,
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      "Katalog Produk Pilihan",
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Scroll horizontal dari kiri ke kanan (Default LTR)
+                    SizedBox(
+                      height: 200,
                       child: GridView.builder(
                         scrollDirection: Axis.horizontal,
                         physics: const BouncingScrollPhysics(),
-                        itemCount: controller.listProduk.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        itemCount: controller.listProduct.length,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 1,
                           mainAxisExtent: 160, // Lebar card horizontal
                           mainAxisSpacing: 12,
                         ),
                         itemBuilder: (context, index) {
-                          final produk = controller.listProduk[index];
+                          final produk = controller.listProduct[index];
 
                           return Dismissible(
-                            key: ValueKey(produk.nama + index.toString()),
+                            key: ValueKey(
+                                (produk.id ?? index).toString() + index.toString()),
                             direction: DismissDirection.down,
                             background: Container(
                               decoration: BoxDecoration(
@@ -113,10 +126,11 @@ class Home extends StatelessWidget {
                                 child: Padding(
                                   padding: const EdgeInsets.all(12),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        produk.nama,
+                                        produk.title ?? "-",
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
@@ -127,7 +141,7 @@ class Home extends StatelessWidget {
                                       ),
                                       const Spacer(),
                                       Text(
-                                        produk.harga,
+                                        produk.genre ?? "-",
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                         style: const TextStyle(
@@ -154,12 +168,12 @@ class Home extends StatelessWidget {
                         },
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
